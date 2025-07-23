@@ -53,6 +53,9 @@
   ;; [<num-leaves> <paragraph_attributes> <leaves_attributes> <text>]
   [leaves paragraph text]
   (let [le? true
+        ;; _ (println "** leaves" leaves)
+        ;; _ (println "** paragraph" paragraph)
+        ;; _ (println "** text" text)
         num-leaves (count leaves)
         paragraph-attr-size 48
         total-fills (total-fills-count leaves)
@@ -98,9 +101,11 @@
     (loop [index 0 offset paragraph-attr-size]
       (when (< index num-leaves)
         (let [leaf (nth leaves index)
+              ;; _ (println "** leaf" leaf)
               font-style (f/serialize-font-style (:font-style leaf))
               font-size (:font-size leaf)
               font-weight (:font-weight leaf)
+              ;; _ (println "** font-style" font-style "weight" font-weight)
               font-id (f/serialize-font-id (:font-id leaf))
               font-family (hash (:font-family leaf))
               font-variant-id (sr/serialize-uuid (:font-variant-id leaf))

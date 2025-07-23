@@ -952,6 +952,7 @@
     ptk/WatchEvent
     (watch [_ state  _]
       (let [style   (deref refs/workspace-clipboard-style)
+            _ (js/console.log "** paste-html-text (style)", style)
             root    (dwtxt/create-root-from-html html style)
             content (tc/dom->cljs root)]
         (when (types.text/valid-content? content)
