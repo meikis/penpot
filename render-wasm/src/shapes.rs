@@ -705,19 +705,24 @@ impl Shape {
             };
             max_stroke = max_stroke.max(width);
         }
-        let mut rect = if let Some(path) = self.get_skia_path() {
-            path.compute_tight_bounds()
-                .with_outset((max_stroke, max_stroke))
-        } else {
-            let mut bounds_rect = self.bounds().to_rect();
-            let mut stroke_rect = bounds_rect;
-            stroke_rect.left -= max_stroke;
-            stroke_rect.right += max_stroke;
-            stroke_rect.top -= max_stroke;
-            stroke_rect.bottom += max_stroke;
+        let mut rect = match &self.shape_type {
+            Type::Text(text_content) => text_content.visual_bounds(),
+            _ => {
+                if let Some(path) = self.get_skia_path() {
+                    path.compute_tight_bounds()
+                        .with_outset((max_stroke, max_stroke))
+                } else {
+                    let mut bounds_rect = self.bounds().to_rect();
+                    let mut stroke_rect = bounds_rect;
+                    stroke_rect.left -= max_stroke;
+                    stroke_rect.right += max_stroke;
+                    stroke_rect.top -= max_stroke;
+                    stroke_rect.bottom += max_stroke;
 
-            bounds_rect.join(stroke_rect);
-            bounds_rect
+                    bounds_rect.join(stroke_rect);
+                    bounds_rect
+                }
+            }
         };
 
         for shadow in self.shadows.iter() {

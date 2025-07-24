@@ -175,6 +175,18 @@ impl TextContent {
     pub fn set_grow_type(&mut self, grow_type: GrowType) {
         self.grow_type = grow_type;
     }
+
+    // Returns the tightest bounding box of the rendered text, relative to self.bounds.x/y.
+    //
+    // This computes the visual bounds by laying out all paragraphs and using
+    // `auto_width` and `auto_height` to determine the actual width and height
+    // required to render the text content completely.
+    pub fn visual_bounds(&self) -> Rect {
+        let mut paragraphs = self.to_paragraphs();
+        let height = auto_height(&mut paragraphs, self.bounds.width());
+        let width = auto_width(&mut paragraphs);
+        Rect::from_xywh(self.bounds.x(), self.bounds.y(), width, height)
+    }
 }
 
 impl Default for TextContent {
